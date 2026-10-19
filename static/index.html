@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>每日 AI 简报</title>
+  <link rel="stylesheet" href="/static/style.css"><script defer src="/static/app.js"></script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="/" aria-label="每日 AI 简报首页"><span class="brand-symbol" aria-hidden="true">日</span><span>每日 AI 简报<small>DAILY BRIEF</small></span></a><div class="top-meta"><span class="status-dot" aria-hidden="true"></span>本地工作台<span class="separator">/</span><time id="today"></time></div></header>
+<main>
+  <section class="intro"><div><p class="eyebrow">YOUR DAILY SIGNAL</p><h1>把注意力，留给重要的事。</h1><p class="subtitle">按你的关注整理 AI 新闻。保留原始来源，也看得见每一步。</p></div><span class="edition">每日精选<br><strong>01—05</strong></span></section>
+  <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+  <div class="workspace">
+    <aside class="sidebar">
+      <section class="panel subscription-panel"><div class="section-heading"><h2>我的订阅</h2><button id="new-subscription" class="text-button" type="button">＋ 新建</button></div>
+        <label for="subscription-select">当前身份</label><select id="subscription-select"><option value="">创建第一个订阅</option></select>
+        <form id="subscription-form">
+          <div class="field"><label for="nickname">昵称</label><input id="nickname" name="nickname" maxlength="80" required placeholder="怎么称呼你"></div>
+          <div class="field"><label for="email">收件邮箱</label><input id="email" name="email" type="email" maxlength="254" required placeholder="you@example.com"><small>用于接收简报，不会发送给模型。</small></div>
+          <div class="field"><label for="topics">关注话题</label><input id="topics" name="topics" placeholder="大语言模型，AI Agent"><small>用中文或英文逗号分隔，最多 10 个。</small></div>
+          <div class="field"><label for="keywords">关键词</label><input id="keywords" name="keywords" placeholder="开源，工具调用，DeepSeek"></div>
+          <div class="schedule"><div class="field"><label for="send-time">每日推送 · 北京时间</label><input id="send-time" name="send_time" type="time" value="09:00" required></div><label class="check-label"><input id="enabled" name="enabled" type="checkbox" checked>启用</label></div>
+          <button type="submit" class="button primary full" id="save-subscription">保存订阅</button>
+          <p class="helper">服务运行期间自动推送。手动预览不会发邮件。</p>
+        </form>
+      </section>
+      <section class="panel history-panel"><div class="section-heading"><h2>往期简报</h2><span class="muted" id="history-count">0 份</span></div><div id="history-list" class="history-list"><p class="empty-small">简报生成后会保存在这里。</p></div></section>
+      <p class="local-note">本地管理模式 · 身份选择不等于安全登录<br>请勿将此服务暴露到公网。</p>
+    </aside>
+    <div class="main-column">
+      <section class="panel reader">
+        <div class="reader-toolbar"><div class="tab-label"><span class="tiny-line" aria-hidden="true"></span><span id="reader-label">今日简报</span></div><button class="button primary" id="generate" disabled>生成预览 <span aria-hidden="true">↗</span></button></div>
+        <div id="run-banner" class="run-banner" role="status" aria-live="polite" hidden></div>
+        <div id="brief-content"><div class="empty-hero"><div class="paper-mark" aria-hidden="true"><i></i><i></i><i></i></div><p class="eyebrow">A LITTLE LESS NOISE</p><h2>你的第一份简报，从关注开始。</h2><p>在左侧添加话题和关键词，保存订阅后生成预览。<br>每一条新闻都会保留可追溯的来源。</p></div></div>
+        <div id="delivery-bar" class="delivery-bar" hidden><div><strong id="delivery-label">尚未发送</strong><p id="delivery-detail"></p></div><button id="send-email" class="button secondary">发送到订阅邮箱</button></div>
+      </section>
+      <section class="panel trace-panel"><div class="section-heading"><div><p class="eyebrow">BEHIND THE BRIEF</p><h2>本次执行记录</h2></div><span class="badge" id="run-status">等待开始</span></div><p class="trace-intro">查看模型选择了哪些工具、工具返回了什么，以及执行耗时。</p><div id="trace-list" class="trace-list"><p class="empty-small">开始生成后，真实调用记录会逐步出现。</p></div><details class="previous-runs"><summary>最近任务</summary><div id="recent-runs"></div></details></section>
+    </div>
+  </div>
+  <footer><span>每日 AI 简报 · 来源先于结论</span><span id="health-label">正在连接本地服务…</span></footer>
+</main>
+</body></html>
