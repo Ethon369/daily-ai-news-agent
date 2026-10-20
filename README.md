@@ -89,7 +89,9 @@ URL 去重由程序处理，事件合并与个性化筛选由模型处理。最�
 
 SQLite 文件位于 `data/news.db`；每次运行的材料、草稿和 Markdown 位于 `data/runs/<run_id>/`。模型工作目录不含收件人和凭据；本地数据库含订阅邮箱，应与其他个人数据一样保管。`data/` 和 `.env` 已加入 `.gitignore`。
 
-部分网络代理将域名解析为 `198.18.0.0/15` 的 Fake-IP。本项目仅对代码固定的两个新闻源端点兼容该解析，且仍校验 HTTPS 证书；任意文章链接继续执行公网地址校验。因此此类代理环境中原文可能获取失败，简报显示“仅标题，信息有限”，不能据此声称阅读全文。没有修改系统代理或证书校验设置。
+部分网络代理将域名解析为 `198.18.0.0/15` 的 Fake-IP。遇到仅包含该地址段的 DNS 结果时，应用向固定的 Cloudflare HTTPS DNS 服务查询真实地址，重新校验为公网地址后固定连接，并保留原域名的 HTTPS 证书校验。每次重定向重新校验；本机、内网、混合私网解析与非 HTTP 协议仍被拒绝。公共 DNS 失败时不会连接 Fake-IP 占位地址。此过程不修改系统 DNS 或代理。
+
+网页优先提取 article/main，去除导航、脚本和侧栏，最多返回 12,000 字符；验证页、过短页面及 PDF 不作为正文。页面明确区分原网页正文片段、来源摘要和仅标题。论文摘要页不等同于完整论文，读取片段也不代表阅读全文。旧简报保持生成时的证据标注，重新生成预览才能使用新抓取结果。
 
 新闻筛选和摘要仍可能出错；原始链接、证据范围和工具事件用于复核，不将摘要视为已独立核实的事实。
 
@@ -105,11 +107,14 @@ node --check static/app.js
 
 Node 只用于可选的 JavaScript 语法检查，应用运行不依赖 Node。
 
-真实外部验证（会消耗 API 额度，不发邮件）：
+真实外部验证（`--model` 会消耗 API 额度，不发邮件）：
 
 ```powershell
 .\.venv\Scripts\python.exe scripts/verify_live.py --model
 .\.venv\Scripts\python.exe scripts/verify_live.py --model --partial
+# 原文修复验证，保留此前验证目录
+.\.venv\Scripts\python.exe scripts/verify_live.py --model --output-dir artifacts/article-fix-agent
+.\.venv\Scripts\python.exe scripts/verify_articles.py --url https://arxiv.org/abs/2610.18861
 # 或独立生成一份不发送邮件的预览
 .\.venv\Scripts\python.exe -m app --topics "AI,大语言模型" --keywords "Agent,开源"
 ```

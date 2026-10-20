@@ -70,3 +70,12 @@ def test_total_timeout(tools,settings):
         async def complete(self,*_):await asyncio.sleep(1)
     settings.agent_timeout=.01
     with pytest.raises(AgentError,match='总运行时间'):run(Agent(settings,Slow()).run(tools,{}))
+
+
+def test_body_and_excerpt_are_labelled_separately(tools):
+    run(tools.fetch_news('huggingface'))
+    item_id=next(iter(tools.items))
+    raw=dumps({'title':'日报','overview':'概要','items':[{'title':'新闻','summary':'摘要','relevance':'相关','source_ids':[item_id]}]})
+    assert validate_final(raw,tools)['items'][0]['evidence_level']=='仅来源摘要，未读取原网页正文'
+    run(tools.read_article(item_id))
+    assert validate_final(raw,tools)['items'][0]['evidence_level']=='已读取 1/1 个来源的原网页正文片段'
